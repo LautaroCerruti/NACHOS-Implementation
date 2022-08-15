@@ -1,0 +1,4 @@
+Plancha 2 Ejercicio 5 b:
+
+En un semáforo no se puede heredar las prioridades ya que no hay forma de saber cual va a ser el thread que va a aumentar el valor del mismo. A diferencia del lock donde si podemos saber cual es el thread que lo está holdeando.
+La única forma de poder mejorar un poco lo del semáforo es adelantarnos en la cola de espera del mismo para poder pasar primero, pero esto ya no sería algo que involucre al scheduler, si no más una implementación personalizada del semáforo.

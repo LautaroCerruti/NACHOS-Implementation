@@ -1,0 +1,5 @@
+Se cambio el funcionamiento de channel, se corrigio lo pedido en el test de prod cons y 
+para la herencia de prioridades se corrigio el error de que no se volvia a la prioridad original y 
+ademas se implemento la funcion PP en semaforos para que cuando hay una inversion de prioridades el 
+thread de alta prioridad que quiere el lock se introduce primero en la lista de semaforos del lock.
+Ademas de eso se elimino la funcion IsEmpty de SynchList.

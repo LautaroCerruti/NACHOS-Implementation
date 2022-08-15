@@ -1,0 +1,3 @@
+Makefile all -C /home/certi/nachos/trunk/nachos-unr22a/code --print-data-base --no-builtin-variables --no-builtin-rules --question
+/bin/sh: 1: Makefile: not found
+

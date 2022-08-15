@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "fstream": "c",
+        "*.tcc": "c",
+        "cstdio": "c",
+        "string_view": "cpp",
+        "syscall.h": "c"
+    },
+    "C_Cpp.dimInactiveRegions": false
+}

@@ -1,0 +1,56 @@
+
+Usando TLB de tamaño 4:
+
+matmult2:
+Paging: faults 33942001, "hits": 346608032, real hits: 312666031, hit ratio: 90.207%
+
+sort:
+Paging: faults 2655116, "hits": 45136508, real hits: 42481392, hit ratio: 94.118%
+
+-------------------------------------------------------------------------------------------------
+
+Usando TLB de tamaño 8:
+
+matmult2:
+Paging: faults 15191572, "hits": 334696695, real hits: 319505123, hit ratio: 95.461%
+
+sort:
+Paging: faults 31562, "hits": 44072058, real hits: 44040496, hit ratio: 99.928%
+
+-------------------------------------------------------------------------------------------------
+
+Usando TLB de tamaño 16:
+
+matmult2:
+Paging: faults 5859228, "hits": 330742649, real hits: 324883421, hit ratio: 98.228%
+
+sort:
+Paging: faults 20253, "hits": 44067831, real hits: 44047578, hit ratio: 99.954%
+
+-------------------------------------------------------------------------------------------------
+
+Usando TLB de tamaño 32:
+
+matmult2:
+Paging: faults 4391227, "hits": 330116451, real hits: 325725224, hit ratio: 98.670%
+
+sort:
+Paging: faults 5733, "hits": 44056846, real hits: 44051113, hit ratio: 99.987%
+
+-------------------------------------------------------------------------------------------------
+
+Usando TLB de tamaño 64:
+
+matmult2:
+Paging: faults 3860063, "hits": 329879297, real hits: 326019234, hit ratio: 98.830%
+
+sort:
+Paging: faults 56, "hits": 44051846, real hits: 44051790, hit ratio: 100.000%
+
+-------------------------------------------------------------------------------------------------
+
+Viendo los resultados con los distintos tamaños de TLB, podemos notar que de 4 a 8 hay una mejora notoria 
+y de 8 a 16 una un poco mas baja pero tambien considerable. Ahora, las mejoras por encima de 16 ya no representan 
+un cambio significativo en el hit ratio. Por lo que consideramos el tamaño de 16 para la TLB el mas idoneo.
+El comportamiento que presenta es asintotico y teniendo en cuenta que una TLB mas grande implica un mayor costo en los cambios de contexto, 
+a partir de 16 entradas consideramos que siempre conviene elegir el tamaño mas pequeño entre las opciones que se tienen.

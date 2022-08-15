@@ -1,0 +1,141 @@
+1-
+Nos permite trabajar en un entorno mas controlado, donde nos es mas facil debuggear y asignar distintos recursos para la ejecucion. Tambien nos permite ver las estadisticas una vez finalizada la ejecucion.
+
+2-
+Encontramos el tamaño de la memoria simulada en la linea MEMORY_SIZE = NUM_PHYS_PAGES * PAGE_SIZE en machine/mmu.hh
+NUM_PHYS_PAGES es 32
+Vemos que PAGE_SIZE = SECTOR_SIZE y SECTOR_SIZE = 128 Bytes
+Por lo tanto la memoria simulada es de 4KB
+
+3- 
+Podemos modificarlo, aumentando el tamaño de cada pagina (SECTOR_SIZE o modificando directamente PAGE_SIZE) o aumentando la cantidad de paginas (NUM_PHYS_PAGES)
+
+4-
+Encontramos que DISK_SIZE = MAGIC_SIZE + NUM_SECTORS * SECTOR_SIZE, donde NUM_SECTORS = SECTORS_PER_TRACK (=32) * NUM_TRACKS (=32) = 1024. SECTOR_SIZE se vio anteriormente que es 128 Bytes, y MAGIC_SIZE es sizeof(int) = 8. Por lo tanto DISK_SIZE es 131080 Bytes
+
+5-
+Vemos que en encoding.hh se enumeran 60 instrucciones simuladas de MIPS
+
+6-
+La funcion main esta definida en los siguientes archivos:
+bin/
+	-coff2flat.c
+	-coff2noff.c
+	-disasm.c
+	-main.c
+	-out.c
+	-readnoff.c
+	-/fuse/nachosfuse.c
+threads/
+	-main.cc
+userland/
+	-echo.c
+	-filetest.c
+	-halt.c
+	-matmult.c
+	-shell.c
+	-sort.c
+	-tiny_shell.c
+	-touch.c
+
+main.cc en threads/ tiene el main principal
+
+7-
+main llama a:
+Initialize (en threads/system.cc) que a su vez llama a:
+	- ASSERT (en lib/assert.hh)
+	- ParseDebugOpts (en threads/system.cc)
+	- RandomInit (en machine/system_dep.cc)
+	- SetFlags (en lib/debug.cc)
+	- SetOpts (lib/debug.cc)
+	- Timer (en machine/timer.cc)
+	- Thread (en threads/thread.cc)
+	- SetStatus (en threads/thread.cc)
+	- Enable (en machine/interrupt.cc)
+	- CallOnUserAbort (en machine/system_dep.cc)
+	- PreemptiveScheduler (threads/preemptive.hh)
+	- SetUp (en threads/preemptive.cc)
+
+DEBUG (en lib/utility.hh) que a su vez llama a:
+	- Print (en lib/debug.cc)
+
+SysInfo (en threads/sys_info.cc)
+
+PrintVersion (threads/main.cc)
+
+ThreadTest (en threads/thread_test.cc) que a su vez llama a:
+	- DEBUG (en lib/utility.hh)
+	- Choose (en threads/thread_test.cc)
+	- Run (en threads/thread_test.cc)
+
+Halt (en machine/interrupt.cc)
+	- Print (en machine/statistics.cc)
+	- Cleanup (en threads/system.cc)
+
+Finish (en threads/thread.cc)
+	- SetLevel (en machine/interrupt.cc)
+	- ASSERT (en lib/assert.hh)
+	- DEBUG (en lib/utility.hh)
+	- Sleep (en threads/thread.cc)
+
+8-
+ASSERT valida una condicion que se le pasa como argumento, si es falsa imprime un mensaje por stderr indicando donde fue el problema y corta la ejecucion del programa con un core dump
+DEBUG si la flag esta activada, imprime un mensaje pasado por argumento
+
+9-
+/// pre-defined debugging flags are:
+///
+/// * `+` -- turn on all debug messages.
+/// * `t` -- thread system.
+/// * `s` -- semaphores, locks, and conditions.
+/// * `i` -- interrupt emulation.
+/// * `m` -- machine emulation (requires *USER_PROGRAM*).
+/// * `d` -- disk emulation (requires *FILESYS*).
+/// * `f` -- file system (requires *FILESYS*).
+/// * `a` -- address spaces (requires *USER_PROGRAM*).
+/// * `e` -- exception handling (requires *USER_PROGRAM*).
+/// * `n` -- network emulation (requires *NETWORK*).
+
+10-
+USER_PROGRAM esta definido en:
+	-filesys/Makefile
+	-network/Makefile
+	-userprog/Makefile
+	-vmem/Makefile
+
+FILESYS_NEEDED esta definido en:
+	-filesys/Makefile
+	-network/Makefile
+	-userprog/Makefile
+	-vmem/Makefile
+
+FILESYS_STUB esta definido en:
+	-userprog/Makefile
+	-vmem/Makefile
+
+NETWORK esta definido en:
+	-network/Makefile
+
+11-
+///     nachos [-d <debugflags>] [-do <debugopts>] [-p]
+///            [-rs <random seed #>] [-z] [-tt]
+///            [-s] [-x <nachos file>] [-tc <consoleIn> <consoleOut>]
+///            [-f] [-cp <unix file> <nachos file>] [-pr <nachos file>]
+///            [-rm <nachos file>] [-ls] [-D] [-c] [-tf]
+///            [-n <network reliability>] [-id <machine id>]
+///            [-tn <other machine id>]
+
+/// * `-rs` -- causes `Yield` to occur at random (but repeatable) spots.
+Esto hace que cada cierta cantidad de ticks, según un número random generado por la seed del argumento, ocurra un yield.
+
+12-
+Resuelto en el codigo
+
+13-
+La clase List define una lista simplemente enlazada.
+La clase SynchList, utilizando List, sirve para lograr la sincronizacion de esta lista simplemente enlazada.
+Solo un hilo a la vez puede acceder a los datos de esta, y si algun hilo quiere eliminar un elemento de la lista, este esperará hasta que haya un elemento en esta.
+
+14, 15, 16, 17, 18- 
+Resuelto en el codigo (18 thread_test_garden_semaphore)
+

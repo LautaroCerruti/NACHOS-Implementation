@@ -1,0 +1,77 @@
+Plancha 6
+Cassinerio Marcos - Cerruti Lautaro - Poma Lucas
+
+1-
+Hipervisores (tipo 1):
+Ventajas:
+    - Implementación relativamente simple.
+    - No es necesario modificar el SO que se simula.
+Desventajas:
+    - Siempre que se ejecuta una instruccion sensible se tiene que saltar al modo kernel.
+    - No puede utilizarse en arquitecturas que no saltan al modo kernel al ejecutar una instrucción sensible.
+
+Emulación:
+Ventajas: 
+    - Si se emula un sistema con una arquitectura similar al anfitrion, la velocidad de ejecución es practicamente la del sistema nativo.
+    - Puede utilizarse en arquitecturas distintas a la del host, incluso arquitecturas que no han sido implementadas en hardware real.
+    - Puede utilizarse en arquitecturas que no soportan virtualizacion con el uso de hipervisores
+    - No es necesario modificar el SO huesped.
+Desventajas:
+    - Se deben traducir las partes de código que son sensibles.
+    - Los sistemas emulados resultantes típicamente tendrán un rendimiento cientos o miles de veces menor al del anfitrión. 
+      (a menos que la arquitectura del procesador sea la similar entre el huesped y el anfitrión)
+    - Implementación mas compleja (se deben emular los perifericos).
+
+Paravirtualizacion:
+Ventajas:
+    - Se realiza con cooperación por parte de los sistemas huéspedes.
+    - La API de paravirtualizacion esta estandarizada por VMI.
+Desventajas:
+    - Se debe modificar el código fuente del SO huesped para transformar todas las instrucciones sensibles en llamadas al hipervisor.
+
+2-
+La shadow page table es una estructura que es mantenida y rellenada por el hipervisor. Esta espeja lo que hace el sistema huesped con sus propias 
+tablas de paginas y luego el hipervisor traduce estas direcciones virtuales en las direcciones fisicas reales haciendo uso de la shadow page table. 
+En caso de que el sistema anfitrion no tenga soporte para la shadow page table, la misma existe implementada en software, pero la dirección 
+a la que el hipervisor traduce la del sistema huesped no es la direccion fisica, si no la direccion virtual del proceso del hipervisor, por lo que 
+luego esta tiene que ser nuevamente traducida a la direccion real por el sistema operativo anfitrión. Esto hace que cada acceso a la memoria del 
+huesped sean 2 traducciones para obtener la página real de la memoria física.
+
+3-
+Uno de los mejores casos para utilizar microkernels es con los sistemas embebidos, ya que de esta forma mantenemos el sistema operativo 
+a lo minimo e indispensable para poder desarrollarse sobre este entorno reducido.
+
+Con la expansion del IOT es conveniente tener microkernels en dispositivos de uso cotidiano, por ejemplo, televisores, impresoras, 
+consolas de videojuegos, etc.
+
+Otro caso son los automoviles, ya que los microkernels son menos propensos a fallas que hagan que el sistema completo se caiga.
+
+4-
+Supongamos p1, p2, dos procesos quieren acceder a la misma region critica a la vez y que ningun otro proceso tiene interes en acceder. 
+Cada uno de estos enviara al resto de procesos un paquete de la forma <R, PID, TS> donde R es la region critica a la que se quiere acceder, PID 
+es el identificador del proceso que envia la solicitud y TS es el timestamp del pedido. Por lo tanto
+    - p1 envia <R, PID1, TS1>
+    - p2 envia <R, PID2, TS2>
+Los procesos que no estan interesados en la region critica responden OK a ambos pedidos.
+Sin perdida de generalidad, como sabemos que los timestamp son unicos, suponemos que TS1 es mayor que TS2
+    - Cuando p1 recibe la tupla de p2, como TS1 > TS2 reponde OK a p2 y se queda bloqueado esperando la respuesta de p2.
+    - Cuando p2 recibe la tupla de p1, como TS2 < TS1 encola la peticion para responderla luego de que termine de usar la seccion critica, 
+      y al recibir el OK de p1 utiliza la seccion este proceso.
+
+5-
+Las diferencias mas notables que encontramos son
+    - A igual poder de procesamiento, un sistema distribuido podria tener un costo menor a un solo nodo con muchos procesadores.
+    - Un sistema distribuido es mucho mas escalable que un unico nodo, ya que simepre se puede agregar un nodo a un sistema distribuido 
+      pero no siempre se peude agregar un procesador a un nodo. 
+    - En unico nodo los procesadores comparten la memoria por lo que implementar exclusiones mutuas es mucho mas simple que en un 
+      sistema distribuido donde para poder acceder a regiones criticas hay que utilizar algoritmos mucho mas costosos y sofisticados 
+      que se comuniquen a traves de la red.
+
+6- 
+Nachos sigue una estructura monolitica ya que implementa dentro del mismo todas las funcionalidades mas comunes de un sistema operativo 
+como el sistema y la parte de network.
+Para migrarlo a una estructura del tipo microkernel habria que remover de la implementacion todas las cosas que no son indispensables para el 
+funcionamiento del SO, y limitarse a dejar solo cosas como el scheduler, la comunicacion entre procesos y el manejo de la memoria virtual.
+Para migrarlo a una estructura sin proteccion habria que borrar la parte de memoria virtual y dejar que todos los procesos accedan a las 
+direcciones fisicas de la memoria. Y ademas habria que remover la distincion que se hace entre espacio de kernel y espacio de usuario que esta 
+implementada en interupt.cc.

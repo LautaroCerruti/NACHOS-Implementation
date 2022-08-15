@@ -1,0 +1,67 @@
+Comparamos en 3 programas el rendimiento de las distintas politicas de reemplazo de paginas, 
+y luego repetimos la prueba con distinto tamaño de memoria y TLB.
+
+8 pages, tlb 4
+
+Usando FIFO:
+
+matmult:
+Ticks: total 716424, idle 0, system 71650, user 644774
+Paging: faults 63269, "hits": 746945, real hits: 683676, hit ratio: 91.530%
+
+matmult2:
+Ticks: total 95070565, idle 0, system 9507060, user 85563505
+Paging: faults 7780080, "hits": 97616922, real hits: 89836842, hit ratio: 92.030%
+
+sort:
+Ticks: total 41397270, idle 0, system 4139730, user 37257540
+Paging: faults 2646336, "hits": 45128043, real hits: 42481707, hit ratio: 94.136%
+
+
+Usando LRU:
+
+matmult:
+Ticks: total 714143, idle 0, system 71420, user 642723
+Paging: faults 61218, "hits": 745628, real hits: 684410, hit ratio: 91.790%
+
+matmult2:
+Ticks: total 94868117, idle 0, system 9486820, user 85381297
+Paging: faults 7597872, "hits": 97532000, real hits: 89934128, hit ratio: 92.210%
+
+sort:
+Ticks: total 41409999, idle 0, system 4141000, user 37268999
+Paging: faults 2657795, "hits": 45138185, real hits: 42480390, hit ratio: 94.112%
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+
+64 pages, tlb 8
+
+Usando FIFO:
+
+matmult:
+Ticks: total 663537, idle 0, system 66360, user 597177
+Paging: faults 15672, "hits": 719762, real hits: 704090, hit ratio: 97.823%
+
+matmult2:
+Ticks: total 89737029, idle 0, system 8973710, user 80763319
+Paging: faults 2979894, "hits": 94969131, real hits: 91989237, hit ratio: 96.862%
+
+sort:
+Ticks: total 38491172, idle 0, system 3849120, user 34642052
+Paging: faults 30848, "hits": 44071117, real hits: 44040269, hit ratio: 99.930%
+
+
+Usando LRU:
+
+matmult:
+Ticks: total 663537, idle 0, system 66360, user 597177
+Paging: faults 15672, "hits": 719762, real hits: 704090, hit ratio: 97.823%
+
+matmult2:
+Ticks: total 89795233, idle 0, system 8979530, user 80815703
+Paging: faults 3032278, "hits": 94991183, real hits: 91958905, hit ratio: 96.808%
+
+sort:
+Ticks: total 38491172, idle 0, system 3849120, user 34642052
+Paging: faults 30848, "hits": 44071117, real hits: 44040269, hit ratio: 99.930%
